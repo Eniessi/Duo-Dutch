@@ -1,4 +1,4 @@
-package org.project
+package com.duodutch
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image

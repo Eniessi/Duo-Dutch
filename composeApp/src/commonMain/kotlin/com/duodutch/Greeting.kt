@@ -1,4 +1,4 @@
-package org.project
+package com.duodutch
 
 class Greeting {
     private val platform = getPlatform()

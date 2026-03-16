@@ -1,4 +1,4 @@
-package org.project
+package com.duodutch
 
 import androidx.compose.ui.window.ComposeUIViewController
 

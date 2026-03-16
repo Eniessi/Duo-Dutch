@@ -1,4 +1,4 @@
-package org.project
+package com.duodutch
 
 interface Platform {
     val name: String

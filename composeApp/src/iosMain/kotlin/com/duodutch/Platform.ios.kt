@@ -1,4 +1,4 @@
-package org.project
+package com.duodutch
 
 import platform.UIKit.UIDevice
 
