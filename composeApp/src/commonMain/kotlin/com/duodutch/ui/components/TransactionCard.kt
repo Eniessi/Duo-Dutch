@@ -22,14 +22,13 @@ import androidx.compose.ui.unit.sp
 import com.duodutch.theme.BackgroundDark
 import com.duodutch.theme.DuoDutchTheme
 
-// Importe as cores do seu tema (ajuste o pacote se necessário)
 import com.duodutch.theme.SurfaceDark
 import com.duodutch.theme.TextPrimaryDark
 import com.duodutch.theme.TextSecondaryDark
 import com.duodutch.theme.GreenIncome
 import com.duodutch.theme.RedExpense
+import com.duodutch.utils.toCurrencyString
 
-// 1. Classe de dados temporária (O nosso esqueleto simulado)
 data class TransacaoMock(
     val titulo: String,
     val data: String,
@@ -45,7 +44,6 @@ fun TransactionCard(
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
-    // Quando tocado, encolhe para 96% do tamanho com efeito de mola
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.96f else 1f,
         animationSpec = spring(
@@ -55,11 +53,9 @@ fun TransactionCard(
         label = "efeitoMolaCartao"
     )
 
-    // 3. A Lógica Semântica de Cores
-    val valorFormatado = if (transacao.isEntrada) "+ R$ ${transacao.valor}" else "- R$ ${transacao.valor}"
+    val valorFormatado = if (transacao.isEntrada) "+ R$ ${transacao.valor.toCurrencyString()}" else "- R$ ${transacao.valor.toCurrencyString()}"
     val corDoValor = if (transacao.isEntrada) GreenIncome else RedExpense
 
-    // 4. O Layout do Cartão
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -102,16 +98,13 @@ fun TransactionCard(
 @Preview
 @Composable
 fun TransactionCardPreview() {
-    // Envolvemos no nosso tema para puxar a tipografia e cores base
     DuoDutchTheme {
-        // Simulamos o fundo escuro da tela Home para ver o contraste real
         Column(
             modifier = Modifier
                 .background(BackgroundDark)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp) // Espaço entre os cartões
         ) {
-            // Testando o cenário de Despesa (Vermelho)
             TransactionCard(
                 transacao = TransacaoMock(
                     titulo = "Supermercado",

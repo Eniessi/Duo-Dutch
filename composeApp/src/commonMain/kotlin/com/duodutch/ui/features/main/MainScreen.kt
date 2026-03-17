@@ -1,6 +1,5 @@
 package com.duodutch.ui.features.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,14 +11,11 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 import com.duodutch.theme.BackgroundDark
 import com.duodutch.theme.OrangePrimary
-import com.duodutch.theme.TextPrimaryDark
 import com.duodutch.ui.components.BottomBarItem
 import com.duodutch.ui.components.DuoDutchBottomBar
 import com.duodutch.ui.features.home.HomeScreen
@@ -30,7 +26,7 @@ fun MainScreen() {
 
     val tabs = listOf(
         BottomBarItem(icon = Icons.Default.Home, label = "Dashboard"),
-        BottomBarItem(icon = Icons.Default.Refresh, label = "Recorrentes")
+        BottomBarItem(icon = Icons.Default.Refresh, label = "Recurring")
     )
 
     Scaffold(
@@ -43,7 +39,7 @@ fun MainScreen() {
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Nova Transação",
+                    contentDescription = "New Transaction",
                     tint = BackgroundDark
                 )
             }
@@ -65,21 +61,8 @@ fun MainScreen() {
         ) {
             when (currentTab) {
                 0 -> HomeScreen()
-                1 -> RecurringScreenMock()
+                1 -> RecurringScreen()
             }
         }
-    }
-}
-
-// Tela falsa com fundo escuro para teste visual
-@Composable
-fun RecurringScreenMock() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(BackgroundDark),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("Tela de Gastos Recorrentes em Construção", color = TextPrimaryDark)
     }
 }

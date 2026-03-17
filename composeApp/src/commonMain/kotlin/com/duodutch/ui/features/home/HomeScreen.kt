@@ -59,7 +59,7 @@ fun HomeScreen() {
                         // APLICANDO A MÁGICA DO RELÓGIO AQUI:
                         .padding(top = 40.dp + topPadding, start = 20.dp, end = 20.dp, bottom = 80.dp)
                 ) {
-                    Text("Bem-vindos de volta,", color = TextSecondaryDark, fontSize = 16.sp)
+                    Text("Welcome", color = TextSecondaryDark, fontSize = 16.sp)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text("DuoDutch", color = TextPrimaryDark, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(48.dp))
@@ -79,7 +79,7 @@ fun HomeScreen() {
                             .padding(32.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("Saldo do Casal", color = TextSecondaryDark, fontSize = 14.sp)
+                        Text("Joint Balance", color = TextSecondaryDark, fontSize = 14.sp)
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "R$ 4.250,00",
@@ -98,7 +98,7 @@ fun HomeScreen() {
         // ITEM 3: Título da Lista
         item {
             Text(
-                text = "Transações Recentes",
+                text = "Recent Transactions",
                 color = TextPrimaryDark,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
