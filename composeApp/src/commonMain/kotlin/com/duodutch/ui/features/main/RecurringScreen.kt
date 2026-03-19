@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.duodutch.domain.models.RecurringBill
 
 import com.duodutch.theme.BackgroundDark
 import com.duodutch.theme.OrangePrimary
@@ -40,10 +41,10 @@ fun RecurringScreen() {
     val topPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 
     val upcomingBills = listOf(
-        RecurringBillMock("Spotify Duo", 27.90, 3),
-        RecurringBillMock("Electricity", 145.50, 8),
-        RecurringBillMock("Fiber Internet", 99.90, 12),
-        RecurringBillMock("Apartment Rent", 1500.00, 15)
+        RecurringBill("1", "Spotify Duo", 27.90, 15),
+        RecurringBill("2", "Electricity", 145.50, 20),
+        RecurringBill("3", "Fiber Internet", 99.90, 25),
+        RecurringBill("4", "Apartment Rent", 1500.00, 5)
     )
 
     LazyColumn(
@@ -181,7 +182,11 @@ fun RecurringScreen() {
 }
 
 @Composable
-fun RecurringBillCard(bill: RecurringBillMock) {
+fun RecurringBillCard(bill: RecurringBill) {
+    // TECH LEAD NOTE: Em um cenário real, o 'daysLeft' viria de um Use Case.
+    // Por enquanto, vamos simular que o cálculo foi feito antes de chegar aqui.
+    val daysLeft = bill.dueDayOfMonth - 10 // Exemplo: Hoje é dia 10
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -203,20 +208,28 @@ fun RecurringBillCard(bill: RecurringBillMock) {
         Spacer(modifier = Modifier.width(16.dp))
 
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = bill.name, color = TextPrimaryDark, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+            Text(
+                text = bill.name, // Usando a propriedade real
+                color = TextPrimaryDark,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "in ${bill.daysLeft} days", color = TextSecondaryDark, fontSize = 14.sp)
+            Text(
+                text = "due in $daysLeft days", // Lógica separada do dado
+                color = TextSecondaryDark,
+                fontSize = 14.sp
+            )
         }
 
         Text(
-            text = "$ ${bill.amount.toCurrencyString()}", // Utilizando a nossa extensão!
+            text = "$ ${bill.amount.toCurrencyString()}",
             color = TextPrimaryDark,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
 
         Spacer(modifier = Modifier.width(8.dp))
-
         Icon(Icons.Default.MoreVert, contentDescription = "Options", tint = TextSecondaryDark)
     }
 }

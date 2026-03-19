@@ -13,26 +13,26 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.duodutch.domain.models.Transaction
+import com.duodutch.domain.models.TransactionType
 
 import com.duodutch.theme.BackgroundDark
-import com.duodutch.theme.DuoDutchTheme
 import com.duodutch.theme.OutlineDark
 import com.duodutch.theme.SurfaceDark
 import com.duodutch.theme.TextPrimaryDark
 import com.duodutch.theme.TextSecondaryDark
-import com.duodutch.ui.components.TransacaoMock
 import com.duodutch.ui.components.TransactionCard
 
 @Composable
 fun HomeScreen() {
     val mockTransactions = listOf(
-        TransacaoMock("Supermercado", "Hoje", 245.50, false),
-        TransacaoMock("Pix da Maria", "Ontem", 150.00, true),
-        TransacaoMock("Netflix", "14 de Março", 55.90, false),
-        TransacaoMock("Restaurante", "12 de Março", 180.00, false),
-        TransacaoMock("Gasolina", "10 de Março", 200.00, false),
-        TransacaoMock("Farmácia", "08 de Março", 85.00, false),
-        TransacaoMock("Salário", "05 de Março", 5000.00, true)
+        Transaction("1", "Supermarket", "Today", 245.50, TransactionType.EXPENSE),
+        Transaction("2", "Maria's Transfer", "Yesterday", 150.00, TransactionType.INCOME),
+        Transaction("3", "Netflix", "March 14", 55.90, TransactionType.EXPENSE),
+        Transaction("4", "Restaurant", "March 12", 180.00, TransactionType.EXPENSE),
+        Transaction("5", "Gas Station", "March 10", 200.00, TransactionType.EXPENSE),
+        Transaction("6", "Pharmacy", "March 08", 85.00, TransactionType.EXPENSE),
+        Transaction("7", "Salary", "March 05", 5000.00, TransactionType.INCOME)
     )
 
     // Lemos a altura da barra do relógio (Status Bar) para empurrar o texto para baixo
@@ -110,7 +110,7 @@ fun HomeScreen() {
         items(mockTransactions) { transacao ->
             Box(modifier = Modifier.padding(horizontal = 20.dp, vertical = 6.dp)) {
                 TransactionCard(
-                    transacao = transacao,
+                    transaction = transacao,
                     onClick = { /* Abre detalhes */ }
                 )
             }

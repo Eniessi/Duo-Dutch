@@ -16,11 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.duodutch.theme.BackgroundDark
-import com.duodutch.theme.DuoDutchTheme
+
+import com.duodutch.domain.models.Transaction
+import com.duodutch.domain.models.TransactionType
 
 import com.duodutch.theme.SurfaceDark
 import com.duodutch.theme.TextPrimaryDark
@@ -29,16 +29,9 @@ import com.duodutch.theme.GreenIncome
 import com.duodutch.theme.RedExpense
 import com.duodutch.utils.toCurrencyString
 
-data class TransacaoMock(
-    val titulo: String,
-    val data: String,
-    val valor: Double,
-    val isEntrada: Boolean
-)
-
 @Composable
 fun TransactionCard(
-    transacao: TransacaoMock,
+    transaction: Transaction, // Recebendo o domínio puro
     onClick: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -53,8 +46,16 @@ fun TransactionCard(
         label = "efeitoMolaCartao"
     )
 
-    val valorFormatado = if (transacao.isEntrada) "+ R$ ${transacao.valor.toCurrencyString()}" else "- R$ ${transacao.valor.toCurrencyString()}"
-    val corDoValor = if (transacao.isEntrada) GreenIncome else RedExpense
+    // Usando o Enum Type-Safe em vez de Booleanos
+    val isIncome = transaction.type == TransactionType.INCOME
+
+    val formattedAmount = if (isIncome) {
+        "+ $ ${transaction.amount.toCurrencyString()}"
+    } else {
+        "- $ ${transaction.amount.toCurrencyString()}"
+    }
+
+    val amountColor = if (isIncome) GreenIncome else RedExpense
 
     Row(
         modifier = Modifier
@@ -73,58 +74,24 @@ fun TransactionCard(
     ) {
         Column {
             Text(
-                text = transacao.titulo,
+                text = transaction.title,
                 color = TextPrimaryDark,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = transacao.data,
+                text = transaction.date,
                 color = TextSecondaryDark,
                 fontSize = 14.sp
             )
         }
 
         Text(
-            text = valorFormatado,
-            color = corDoValor,
+            text = formattedAmount,
+            color = amountColor,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
-    }
-}
-
-@Preview
-@Composable
-fun TransactionCardPreview() {
-    DuoDutchTheme {
-        Column(
-            modifier = Modifier
-                .background(BackgroundDark)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp) // Espaço entre os cartões
-        ) {
-            TransactionCard(
-                transacao = TransacaoMock(
-                    titulo = "Supermercado",
-                    data = "16 de Março",
-                    valor = 245.50,
-                    isEntrada = false
-                ),
-                onClick = { /* Não faz nada no preview */ }
-            )
-
-            // Testando o cenário de Receita (Verde)
-            TransactionCard(
-                transacao = TransacaoMock(
-                    titulo = "Transferência da Maria",
-                    data = "15 de Março",
-                    valor = 150.00,
-                    isEntrada = true
-                ),
-                onClick = { /* Não faz nada no preview */ }
-            )
-        }
     }
 }
