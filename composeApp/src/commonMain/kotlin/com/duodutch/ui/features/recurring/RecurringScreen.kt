@@ -1,4 +1,4 @@
-package com.duodutch.ui.features.main
+package com.duodutch.ui.features.recurring
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.duodutch.domain.models.RecurringBill
+import com.duodutch.domain.usecases.GetDaysUntilDueUseCase
 
 import com.duodutch.theme.BackgroundDark
 import com.duodutch.theme.OrangePrimary
@@ -28,17 +30,11 @@ import com.duodutch.theme.SurfaceDark
 import com.duodutch.theme.TextPrimaryDark
 import com.duodutch.theme.TextSecondaryDark
 import com.duodutch.utils.toCurrencyString
-
-// 1. Data Mock in English
-data class RecurringBillMock(
-    val name: String,
-    val amount: Double,
-    val daysLeft: Int
-)
-
 @Composable
 fun RecurringScreen() {
     val topPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+
+    val getDaysUntilDueUseCase = remember { GetDaysUntilDueUseCase() }
 
     val upcomingBills = listOf(
         RecurringBill("1", "Spotify Duo", 27.90, 15),
@@ -174,18 +170,17 @@ fun RecurringScreen() {
 
         // ITEM 4: Bills List
         items(upcomingBills) { bill ->
+            val daysUntilDue = getDaysUntilDueUseCase(bill)
+
             Box(modifier = Modifier.padding(horizontal = 20.dp, vertical = 6.dp)) {
-                RecurringBillCard(bill)
+                RecurringBillCard(bill, daysUntilDue)
             }
         }
     }
 }
 
 @Composable
-fun RecurringBillCard(bill: RecurringBill) {
-    // TECH LEAD NOTE: Em um cenário real, o 'daysLeft' viria de um Use Case.
-    // Por enquanto, vamos simular que o cálculo foi feito antes de chegar aqui.
-    val daysLeft = bill.dueDayOfMonth - 10 // Exemplo: Hoje é dia 10
+fun RecurringBillCard(bill: RecurringBill, daysLeft: Int) {
 
     Row(
         modifier = Modifier

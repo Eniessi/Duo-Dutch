@@ -19,6 +19,7 @@ import com.duodutch.theme.OrangePrimary
 import com.duodutch.ui.components.BottomBarItem
 import com.duodutch.ui.components.DuoDutchBottomBar
 import com.duodutch.ui.features.home.HomeScreen
+import com.duodutch.ui.features.recurring.RecurringScreen
 
 @Composable
 fun MainScreen() {
