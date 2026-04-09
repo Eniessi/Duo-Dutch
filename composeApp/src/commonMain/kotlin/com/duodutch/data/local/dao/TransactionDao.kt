@@ -21,8 +21,8 @@ interface TransactionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transaction: TransactionEntity)
 
-    @Delete
-    suspend fun deleteTransaction(transaction: TransactionEntity)
+    @Query("DELETE FROM transactions WHERE id = :id")
+    suspend fun deleteTransactionById(id: String)
 
     // Função utilitária para limparmos a base de dados de um casal (útil para cenários de logout)
     @Query("DELETE FROM transactions WHERE householdId = :householdId")

@@ -25,9 +25,10 @@ data class RecurringUiState(
     val upcomingBillsWithDaysLeft: List<Pair<RecurringBill, Int>> = emptyList()
 )
 @OptIn(ExperimentalTime::class)
-class RecurringViewModel : ViewModel() {
-
-    private val getDaysUntilDueUseCase = GetDaysUntilDueUseCase()
+class RecurringViewModel(
+    // 1. INJEÇÃO: Agora o ViewModel recebe o UseCase da fábrica
+    private val getDaysUntilDueUseCase: GetDaysUntilDueUseCase
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RecurringUiState())
     val uiState: StateFlow<RecurringUiState> = _uiState.asStateFlow()

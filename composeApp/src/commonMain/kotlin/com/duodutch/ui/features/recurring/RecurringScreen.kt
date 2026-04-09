@@ -23,6 +23,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.duodutch.di.AppContainer
 import com.duodutch.domain.models.RecurringBill
 import com.duodutch.domain.usecases.GetDaysUntilDueUseCase
 
@@ -35,10 +38,20 @@ import com.duodutch.theme.TextSecondaryDark
 import com.duodutch.utils.toCurrencyString
 @Composable
 fun RecurringScreen(
-    viewModel: RecurringViewModel = viewModel()
+    appContainer: AppContainer
 ) {
-    val topPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 
+    val viewModel: RecurringViewModel = viewModel(
+        factory = viewModelFactory {
+            initializer {
+                RecurringViewModel(
+                    getDaysUntilDueUseCase = appContainer.getDaysUntilDueUseCase
+                )
+            }
+        }
+    )
+
+    val topPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val state by viewModel.uiState.collectAsState()
 
     LazyColumn(

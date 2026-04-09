@@ -13,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import com.duodutch.di.AppContainer
 
 import com.duodutch.theme.BackgroundDark
 import com.duodutch.theme.OrangePrimary
@@ -22,7 +23,7 @@ import com.duodutch.ui.features.home.HomeScreen
 import com.duodutch.ui.features.recurring.RecurringScreen
 
 @Composable
-fun MainScreen() {
+fun MainScreen(appContainer: AppContainer) {
     var currentTab by remember { mutableStateOf(0) }
 
     val tabs = listOf(
@@ -61,8 +62,8 @@ fun MainScreen() {
                 .padding(bottom = paddingValues.calculateBottomPadding())
         ) {
             when (currentTab) {
-                0 -> HomeScreen()
-                1 -> RecurringScreen()
+                0 -> HomeScreen(appContainer = appContainer)
+                1 -> RecurringScreen(appContainer = appContainer)
             }
         }
     }

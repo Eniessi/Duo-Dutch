@@ -7,56 +7,47 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.duodutch.domain.models.Transaction
-import com.duodutch.domain.models.TransactionType
-
-import com.duodutch.theme.BackgroundDark
-import com.duodutch.theme.OutlineDark
-import com.duodutch.theme.SurfaceDark
-import com.duodutch.theme.TextPrimaryDark
-import com.duodutch.theme.TextSecondaryDark
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.duodutch.di.AppContainer
+import com.duodutch.theme.*
 import com.duodutch.ui.components.TransactionCard
+import com.duodutch.utils.toCurrencyString
 
 @Composable
-fun HomeScreen() {
-    val mockTransactions = listOf(
-        Transaction("1", "Supermarket", "Today", 245.50, TransactionType.EXPENSE),
-        Transaction("2", "Maria's Transfer", "Yesterday", 150.00, TransactionType.INCOME),
-        Transaction("3", "Netflix", "March 14", 55.90, TransactionType.EXPENSE),
-        Transaction("4", "Restaurant", "March 12", 180.00, TransactionType.EXPENSE),
-        Transaction("5", "Gas Station", "March 10", 200.00, TransactionType.EXPENSE),
-        Transaction("6", "Pharmacy", "March 08", 85.00, TransactionType.EXPENSE),
-        Transaction("7", "Salary", "March 05", 5000.00, TransactionType.INCOME)
+fun HomeScreen(appContainer: AppContainer) {
+    // INJEÇÃO MANUAL: Criamos o ViewModel usando as peças da nossa fábrica
+    val viewModel: HomeViewModel = viewModel(
+        factory = viewModelFactory {
+            initializer { // <- ESTA É A PALAVRA MÁGICA QUE FALTAVA
+                HomeViewModel(
+                    transactionRepository = appContainer.transactionRepository,
+                    calculateJointBalanceUseCase = appContainer.calculateJointBalanceUseCase
+                )
+            }
+        }
     )
 
-    // Lemos a altura da barra do relógio (Status Bar) para empurrar o texto para baixo
+    val state by viewModel.uiState.collectAsState()
     val topPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(BackgroundDark), // Fundo base da tela
-        contentPadding = PaddingValues(bottom = 100.dp) // Espaço para não grudar no fundo
+        modifier = Modifier.fillMaxSize().background(BackgroundDark),
+        contentPadding = PaddingValues(bottom = 100.dp)
     ) {
-
-        // ITEM 1: O Cabeçalho Bicolor + Cartão Sobreposto
         item {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                // Fundo claro do topo
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomCenter) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(SurfaceDark)
-                        // APLICANDO A MÁGICA DO RELÓGIO AQUI:
+                    modifier = Modifier.fillMaxWidth().background(SurfaceDark)
                         .padding(top = 40.dp + topPadding, start = 20.dp, end = 20.dp, bottom = 80.dp)
                 ) {
                     Text("Welcome", color = TextSecondaryDark, fontSize = 16.sp)
@@ -65,54 +56,37 @@ fun HomeScreen() {
                     Spacer(modifier = Modifier.height(48.dp))
                 }
 
-                // Cartão Flutuante de Saldo
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp)
-                        .offset(y = 40.dp) // Puxa o cartão 40 pixels para baixo
-                ) {
+                Box(modifier = Modifier.padding(horizontal = 20.dp).offset(y = 40.dp)) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(24.dp))
-                            .background(OutlineDark)
-                            .padding(32.dp),
+                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(24.dp))
+                            .background(OutlineDark).padding(32.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text("Joint Balance", color = TextSecondaryDark, fontSize = 14.sp)
                         Spacer(modifier = Modifier.height(8.dp))
+                        // EXIBE O SALDO REAL CALCULADO
                         Text(
-                            text = "R$ 4.250,00",
-                            color = TextPrimaryDark,
-                            fontSize = 40.sp,
-                            fontWeight = FontWeight.Bold
+                            text = "R$ ${state.totalBalance.toCurrencyString()}",
+                            color = TextPrimaryDark, fontSize = 40.sp, fontWeight = FontWeight.Bold
                         )
                     }
                 }
             }
         }
 
-        // ITEM 2: Espaçador
         item { Spacer(modifier = Modifier.height(60.dp)) }
 
-        // ITEM 3: Título da Lista
         item {
             Text(
-                text = "Recent Transactions",
-                color = TextPrimaryDark,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
+                text = "Recent Transactions", color = TextPrimaryDark, fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
             )
         }
 
-        // ITEM 4: A Lista de Cartões
-        items(mockTransactions) { transacao ->
+        // EXIBE A LISTA REAL VINDA DO BANCO
+        items(state.transactions) { transacao ->
             Box(modifier = Modifier.padding(horizontal = 20.dp, vertical = 6.dp)) {
-                TransactionCard(
-                    transaction = transacao,
-                    onClick = { /* Abre detalhes */ }
-                )
+                TransactionCard(transaction = transacao, onClick = { })
             }
         }
     }
