@@ -15,6 +15,7 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.plus
 import kotlinx.datetime.minus
 import kotlin.math.abs
+import kotlin.time.ExperimentalTime
 
 data class RecurringUiState(
     val currentDayNumber: String = "",
@@ -23,7 +24,7 @@ data class RecurringUiState(
     val todayIndex: Int = 3,
     val upcomingBillsWithDaysLeft: List<Pair<RecurringBill, Int>> = emptyList()
 )
-
+@OptIn(ExperimentalTime::class)
 class RecurringViewModel : ViewModel() {
 
     private val getDaysUntilDueUseCase = GetDaysUntilDueUseCase()

@@ -4,7 +4,9 @@ import com.duodutch.domain.models.RecurringBill
 import kotlin.time.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 class GetDaysUntilDueUseCase {
     operator fun invoke(bill: RecurringBill): Int {
         // Agora o Clock.System vai brilhar verde (resolvido nativamente)
