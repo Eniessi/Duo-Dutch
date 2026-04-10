@@ -1,19 +1,26 @@
 package com.duodutch.data.local
 
+import androidx.room.ConstructedBy // NOVO
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.RoomDatabaseConstructor // NOVO
 import com.duodutch.data.local.dao.TransactionDao
 import com.duodutch.data.local.entities.TransactionEntity
 
-// O KSP vai ler este @Database e gerar todo o código SQL automaticamente
 @Database(
     entities = [TransactionEntity::class],
     version = 1
 )
-// No KMP, a classe TEM de ser abstract e herdar de RoomDatabase
+@ConstructedBy(AppDatabaseConstructor::class) // A MÁGICA QUE O COMPILADOR EXIGIU
 abstract class AppDatabase : RoomDatabase() {
 
-    // É assim que o resto da aplicação vai aceder ao nosso DAO
     abstract fun transactionDao(): TransactionDao
 
+}
+
+// Criamos uma "promessa" de construtor. O motor KSP vai gerar a implementação
+// real ('actual') para Android e iOS por baixo dos panos!
+@Suppress("NO_ACTUAL_FOR_EXPECT")
+expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
+    override fun initialize(): AppDatabase
 }

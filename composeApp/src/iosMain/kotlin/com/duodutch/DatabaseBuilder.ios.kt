@@ -25,6 +25,5 @@ fun getDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
     // 3. Retornamos o construtor da base de dados
     return Room.databaseBuilder<AppDatabase>(
         name = dbFilePath,
-        factory = { AppDatabase::class.instantiateImpl() }
     )
 }
