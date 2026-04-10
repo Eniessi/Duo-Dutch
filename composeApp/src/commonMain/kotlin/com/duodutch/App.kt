@@ -2,7 +2,6 @@ package com.duodutch
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.tooling.preview.Preview
 import com.duodutch.data.local.AppDatabase
 import com.duodutch.di.AppContainer
 
@@ -10,7 +9,6 @@ import com.duodutch.theme.DuoDutchTheme
 import com.duodutch.ui.features.main.MainScreen
 
 @Composable
-@Preview
 fun App(
     database: AppDatabase? = null
 ) {
