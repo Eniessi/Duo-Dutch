@@ -1,16 +1,14 @@
 package com.duodutch.data.local
 
 import androidx.room.RoomDatabase
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import androidx.sqlite.SQLiteDriver
 
-// Esta função recebe um "Builder" (construído de forma diferente no Android e no iOS)
-// e adiciona o motor SQLite multiplataforma antes de compilar a base de dados final.
+// Agora o construtor exige que a plataforma diga qual driver usar
 fun getRoomDatabase(
-    builder: RoomDatabase.Builder<AppDatabase>
+    builder: RoomDatabase.Builder<AppDatabase>,
+    driver: SQLiteDriver
 ): AppDatabase {
     return builder
-        // O BundledSQLiteDriver garante que a versão do SQL é exatamente a mesma
-        // no Android e no iOS, evitando bugs bizarros de inconsistência.
-        .setDriver(BundledSQLiteDriver())
+        .setDriver(driver) // Usa o driver injetado
         .build()
 }

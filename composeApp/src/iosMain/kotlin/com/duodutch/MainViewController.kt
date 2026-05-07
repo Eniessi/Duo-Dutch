@@ -1,14 +1,14 @@
 package com.duodutch
 
 import androidx.compose.ui.window.ComposeUIViewController
-import com.duodutch.data.local.getRoomDatabase // Importante!
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver // <-- O Driver Embutido
+import com.duodutch.data.local.getRoomDatabase
 
 fun MainViewController() = ComposeUIViewController {
-    // 1. O iOS descobre a pasta segura no iPhone
     val builder = getDatabaseBuilder()
-    // 2. Criamos a Base de Dados
-    val database = getRoomDatabase(builder)
 
-    // 3. Entregamos a base de dados à aplicação!
+    // Injetamos o motor multiplataforma no iOS
+    val database = getRoomDatabase(builder, BundledSQLiteDriver())
+
     App(database = database)
 }
